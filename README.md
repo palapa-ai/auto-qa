@@ -44,7 +44,52 @@ you run. See [What "server" means here](#what-server-means-here).
 
 ## Setup
 
-### 1. Add the dependency
+### Quick start: `auto_qa init` (recommended)
+
+1. Add the dev dependency and fetch it:
+
+   ```yaml
+   dev_dependencies:
+     auto_qa: ^0.1.0
+   ```
+
+   ```sh
+   flutter pub get
+   ```
+
+2. Scaffold the Claude Code wiring with one command, from your project root:
+
+   ```sh
+   dart run auto_qa init
+   ```
+
+   It writes (and tells you what it did):
+   - **`.mcp.json`** — registers the `auto_qa` MCP server (merged in if the file
+     already exists; other servers are preserved).
+   - **`.claude/skills/auto-qa/SKILL.md`** — an `/auto-qa` skill telling the
+     agent how to drive your app.
+   - **`test_driver/app.dart`** — a driver-enabled entrypoint importing your
+     app's `main.dart` (skipped if it already exists).
+
+   Flags: `--device=NAME` (default `macos`, e.g. `--device=chrome`) and
+   `--force` (overwrite the skill / entrypoint).
+
+3. Open Claude Code in the project and run **`/auto-qa`** (or just ask it to QA
+   the app). Add `.auto_qa/` to your `.gitignore` — that's where screenshots
+   land.
+
+> `auto_qa init` scaffolds files into *your* project because Claude Code
+> discovers skills from `.claude/skills/`. Installing the pub package alone does
+> **not** register a skill — pub has no post-install hook. A one-command Claude
+> Code **plugin** (skill + MCP server in a single `/plugin install`) is planned;
+> see the repo issues.
+
+### Manual setup
+
+Prefer to wire it up by hand? These steps are exactly what `auto_qa init`
+automates.
+
+#### 1. Add the dependency
 
 ```yaml
 dev_dependencies:

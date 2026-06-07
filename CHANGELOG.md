@@ -11,3 +11,5 @@ Initial release.
   and `--ready-delay-ms` for apps with a splash / async startup.
 - Every interaction wrapped in `runUnsynchronized` so continuously-animating
   apps don't hang.
+- `auto_qa init` scaffolds the Claude Code wiring into a project: `.mcp.json`,
+  an `/auto-qa` skill under `.claude/skills/`, and a `test_driver/app.dart`.

@@ -10,4 +10,5 @@
 library;
 
 export 'src/auto_qa_server.dart';
+export 'src/init_command.dart';
 export 'src/mcp_protocol.dart';
