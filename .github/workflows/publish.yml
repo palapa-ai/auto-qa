@@ -1,8 +1,9 @@
 name: Publish
 
 # Tag-triggered, tokenless publish to pub.dev via GitHub OIDC.
-# Release flow:  bump pubspec.yaml (+ autoQaServerVersion + CHANGELOG) on main,
-#                then `git tag vX.Y.Z && git push origin vX.Y.Z`.
+# Release flow:  bump pubspec.yaml (+ autoQaServerVersion + CHANGELOG) on main —
+#                tag-release.yml then creates the vX.Y.Z tag from pubspec.yaml,
+#                which triggers this workflow. (You can also push a tag by hand.)
 # pub.dev's OIDC only trusts a version tag (not a branch push), so the trigger is
 # the tag — but the job refuses to publish unless the tagged commit is on main.
 on:

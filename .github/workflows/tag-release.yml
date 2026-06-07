@@ -1,0 +1,50 @@
+name: Tag release
+
+# The version lives only in pubspec.yaml. When a version bump lands on main this
+# creates and pushes the matching `vX.Y.Z` tag, which triggers publish.yml
+# (tokenless OIDC publish). You never type a version into a release command —
+# just bump pubspec.yaml (+ the autoQaServerVersion constant and CHANGELOG) and
+# merge to main.
+#
+# The tag is pushed with a PAT (secrets.RELEASE_TAG_PAT, contents: write) on
+# purpose: a tag pushed with the default GITHUB_TOKEN does NOT trigger other
+# workflows, so it would never reach publish.yml. Only tag-pushing uses the PAT;
+# publishing stays tokenless.
+on:
+  push:
+    branches: [main]
+    paths: ["pubspec.yaml"]
+
+jobs:
+  tag:
+    name: Tag the pubspec.yaml version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need tags + history
+          token: ${{ secrets.RELEASE_TAG_PAT }} # so the tag push triggers publish.yml
+
+      - name: Tag v<pubspec version> if it doesn't exist yet
+        run: |
+          set -euo pipefail
+          version=$(grep -E '^version:' pubspec.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          constant=$(grep -E 'autoQaServerVersion' lib/src/mcp_protocol.dart | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          changelog=$(grep -m1 -oE '[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md)
+          echo "pubspec=$version  constant=$constant  changelog=$changelog"
+
+          if [ "$version" != "$constant" ] || [ "$version" != "$changelog" ]; then
+            echo "::error::version mismatch — pubspec=$version, autoQaServerVersion=$constant, CHANGELOG=$changelog. Bump all three together."
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null 2>&1; then
+            echo "v$version is already tagged — nothing to release."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$version" -m "Release v$version"
+          git push origin "v$version"
+          echo "pushed tag v$version → publish.yml will verify and publish it"

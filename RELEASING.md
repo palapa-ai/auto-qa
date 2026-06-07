@@ -12,16 +12,20 @@ name on [pub.dev](https://pub.dev) and ties it to a publisher/account.
    <https://pub.dev/create-publisher>. Publishing under a verified publisher
    shows the domain on the package page and is the norm for org-owned packages.
    Optional — you can publish under your account first and migrate later.
-3. **Automated publishing (recommended).** This repo ships
-   [`.github/workflows/publish.yml`](.github/workflows/publish.yml): a
-   tag-triggered, tokenless (GitHub OIDC) publish. To turn it on, after the
-   first manual publish go to the package's pub.dev admin page →
-   *Automated publishing → GitHub Actions*, set the repo to `palapa-ai/auto_qa`
-   and the tag pattern to `v{{version}}`. From then on, releasing is just:
-   tag `vX.Y.Z` on main and push it. The workflow refuses to publish unless the
-   tag matches `pubspec.yaml` (and the `autoQaServerVersion` constant and the
-   top `CHANGELOG.md` entry), the tagged commit is on `main`, and
-   format/analyze/test pass.
+3. **Automated publishing (recommended).** This repo ships two workflows:
+   [`tag-release.yml`](.github/workflows/tag-release.yml) — on a version bump to
+   `main`, reads the version from `pubspec.yaml` and pushes the matching
+   `vX.Y.Z` tag — and [`publish.yml`](.github/workflows/publish.yml) — on that
+   tag, verifies the version + that the commit is on `main`, runs
+   format/analyze/test, then publishes via tokenless GitHub OIDC. To enable it:
+   - After the first manual publish, on the package's pub.dev admin page enable
+     *Automated publishing → GitHub Actions*, repo `palapa-ai/auto_qa`, tag
+     pattern `v{{version}}`.
+   - Add a repo secret **`RELEASE_TAG_PAT`** — a fine-grained PAT with
+     `contents: write` on `palapa-ai/auto_qa`. `tag-release.yml` pushes the tag
+     with it so the tag event triggers `publish.yml` (tags pushed with the
+     default `GITHUB_TOKEN` don't trigger other workflows). Only tag-pushing
+     uses this PAT; publishing stays tokenless.
 
 ## Pre-flight (every release)
 
@@ -59,21 +63,21 @@ Review the file list it prints, then confirm. **This is irreversible** — a
 published version can be *retracted* but never overwritten or deleted, and the
 package name is permanent.
 
-### Tag the release (automated publish)
+### Cut a release (bump + merge — no tagging by hand)
 
-Once automated publishing is enabled (see one-time setup), this is the entire
-release after merging a version bump to `main`:
+The version lives only in `pubspec.yaml`. Once automated publishing is enabled
+(see one-time setup), to release you:
 
-```sh
-git checkout main && git pull
-git tag v0.1.0
-git push origin v0.1.0
-```
+1. Bump `version:` in `pubspec.yaml`, the `autoQaServerVersion` constant in
+   `lib/src/mcp_protocol.dart`, and add a matching `## X.Y.Z` heading to
+   `CHANGELOG.md` (all three must match — the workflows enforce it).
+2. Merge that to `main`.
 
-Pushing the tag triggers [`publish.yml`](.github/workflows/publish.yml), which
-verifies the version, runs the tests, and publishes via OIDC — **no manual
-`dart pub publish`, no stored token.** Then cut a GitHub Release from the tag
-with the changelog notes.
+That's it. `tag-release.yml` reads the version from `pubspec.yaml`, pushes the
+`vX.Y.Z` tag, and `publish.yml` verifies + tests + publishes via OIDC. **You
+never type a version into a release command, and there's no manual
+`dart pub publish`.** (You can still push a `vX.Y.Z` tag by hand if you ever want
+to — `publish.yml` handles that too.)
 
 ## After publishing
 
