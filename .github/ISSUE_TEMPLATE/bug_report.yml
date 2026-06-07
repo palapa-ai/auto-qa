@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in auto_qa isn't working as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for filing a bug! Please fill out the sections below.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, including what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: How can we reproduce it? Include the `.mcp.json` / flags you used.
+      placeholder: |
+        1. Register auto_qa with args ...
+        2. Ask the agent to ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (stderr)
+      description: auto_qa writes all diagnostics to stderr — paste any `[auto_qa]` / `[flutter]` lines.
+      render: shell
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Output of `flutter --version` plus the auto_qa version.
+    validations:
+      required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: Target device
+      options:
+        - macos
+        - ios
+        - chrome (web)
+        - other
+    validations:
+      required: true

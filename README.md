@@ -161,6 +161,12 @@ first tool call, so the MCP handshake never blocks on a build):
 - **stdout is the protocol.** All diagnostics go to stderr; the MCP client only
   sees clean JSON-RPC on stdout.
 
+## Contributing
+
+Issues and PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Bug reports and
+feature requests have [issue templates](.github/ISSUE_TEMPLATE), and every PR
+runs format + analyze + test in CI.
+
 ## License
 
 BSD-3-Clause © Palapa AI. See [LICENSE](LICENSE).
