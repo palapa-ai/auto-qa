@@ -56,7 +56,7 @@ jobs:
 
       # Tokenless publish. Requires automated publishing to be enabled once on
       # pub.dev (Admin → Automated publishing → GitHub Actions: repo
-      # palapa-ai/auto_qa, tag pattern v{{version}}). Available only after the
+      # palapa-ai/auto-qa, tag pattern v{{version}}). Available only after the
       # first manual publish.
       - name: Publish to pub.dev
         run: dart pub publish --force

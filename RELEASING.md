@@ -19,10 +19,10 @@ name on [pub.dev](https://pub.dev) and ties it to a publisher/account.
    tag, verifies the version + that the commit is on `main`, runs
    format/analyze/test, then publishes via tokenless GitHub OIDC. To enable it:
    - After the first manual publish, on the package's pub.dev admin page enable
-     *Automated publishing → GitHub Actions*, repo `palapa-ai/auto_qa`, tag
+     *Automated publishing → GitHub Actions*, repo `palapa-ai/auto-qa`, tag
      pattern `v{{version}}`.
    - Add a repo secret **`RELEASE_TAG_PAT`** — a fine-grained PAT with
-     `contents: write` on `palapa-ai/auto_qa`. `tag-release.yml` pushes the tag
+     `contents: write` on `palapa-ai/auto-qa`. `tag-release.yml` pushes the tag
      with it so the tag event triggers `publish.yml` (tags pushed with the
      default `GITHUB_TOKEN` don't trigger other workflows). Only tag-pushing
      uses this PAT; publishing stays tokenless.
