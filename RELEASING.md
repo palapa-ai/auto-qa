@@ -12,13 +12,16 @@ name on [pub.dev](https://pub.dev) and ties it to a publisher/account.
    <https://pub.dev/create-publisher>. Publishing under a verified publisher
    shows the domain on the package page and is the norm for org-owned packages.
    Optional — you can publish under your account first and migrate later.
-3. **Automated publishing (optional, recommended).** pub.dev supports
-   publishing straight from GitHub Actions on a version tag, with no long-lived
-   token. On the package's pub.dev admin page, enable
-   *Automated publishing → GitHub Actions*, set the repo to
-   `palapa-ai/auto-qa` and a tag pattern like `v{{version}}`, then add the
-   official workflow (`dart-lang/setup-dart/.github/workflows/publish.yml`).
-   Once enabled, releasing is just: tag `vX.Y.Z` and push.
+3. **Automated publishing (recommended).** This repo ships
+   [`.github/workflows/publish.yml`](.github/workflows/publish.yml): a
+   tag-triggered, tokenless (GitHub OIDC) publish. To turn it on, after the
+   first manual publish go to the package's pub.dev admin page →
+   *Automated publishing → GitHub Actions*, set the repo to `palapa-ai/auto_qa`
+   and the tag pattern to `v{{version}}`. From then on, releasing is just:
+   tag `vX.Y.Z` on main and push it. The workflow refuses to publish unless the
+   tag matches `pubspec.yaml` (and the `autoQaServerVersion` constant and the
+   top `CHANGELOG.md` entry), the tagged commit is on `main`, and
+   format/analyze/test pass.
 
 ## Pre-flight (every release)
 
@@ -56,17 +59,21 @@ Review the file list it prints, then confirm. **This is irreversible** — a
 published version can be *retracted* but never overwritten or deleted, and the
 package name is permanent.
 
-### Tag the release
+### Tag the release (automated publish)
+
+Once automated publishing is enabled (see one-time setup), this is the entire
+release after merging a version bump to `main`:
 
 ```sh
+git checkout main && git pull
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-(If automated publishing is enabled, pushing the tag *is* the publish step —
-skip the manual `dart pub publish`.)
-
-Then cut a GitHub Release from the tag with the changelog notes.
+Pushing the tag triggers [`publish.yml`](.github/workflows/publish.yml), which
+verifies the version, runs the tests, and publishes via OIDC — **no manual
+`dart pub publish`, no stored token.** Then cut a GitHub Release from the tag
+with the changelog notes.
 
 ## After publishing
 
