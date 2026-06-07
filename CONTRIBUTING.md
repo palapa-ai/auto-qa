@@ -7,8 +7,8 @@ that keep it small, dependency-light, and well-tested are very welcome.
 ## Development setup
 
 ```sh
-git clone https://github.com/palapa-ai/auto_qa.git
-cd auto_qa
+git clone https://github.com/palapa-ai/auto-qa.git
+cd auto-qa
 flutter pub get
 flutter test       # the protocol/options layer is fully unit-tested
 flutter analyze

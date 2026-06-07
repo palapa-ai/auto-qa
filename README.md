@@ -1,7 +1,7 @@
 # auto_qa
 
 [![pub package](https://img.shields.io/pub/v/auto_qa.svg)](https://pub.dev/packages/auto_qa)
-[![CI](https://github.com/palapa-ai/auto_qa/actions/workflows/ci.yaml/badge.svg)](https://github.com/palapa-ai/auto_qa/actions/workflows/ci.yaml)
+[![CI](https://github.com/palapa-ai/auto-qa/actions/workflows/ci.yaml/badge.svg)](https://github.com/palapa-ai/auto-qa/actions/workflows/ci.yaml)
 [![License: BSD-3-Clause](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](LICENSE)
 
 **Let an LLM drive your live Flutter app.** `auto_qa` is a small
