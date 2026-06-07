@@ -1,0 +1,12 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# A library package pins versions downstream, so we don't commit the lockfile.
+pubspec.lock
+
+# auto_qa runtime artifacts (screenshots, generated defines)
+.auto_qa/

@@ -1,0 +1,19 @@
+name: auto_qa_example
+description: A tiny app demonstrating how to drive a Flutter app with auto-qa.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  auto_qa:
+    path: ../
+  flutter_driver:
+    sdk: flutter
+  flutter_lints: ^5.0.0

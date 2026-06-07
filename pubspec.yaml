@@ -1,0 +1,32 @@
+name: auto_qa
+description: >-
+  An MCP server that lets an LLM drive your live Flutter app — screenshot, tap,
+  type, scroll, and inspect the widget tree — for AI-assisted QA.
+version: 0.1.0
+repository: https://github.com/palapa-ai/auto-qa
+issue_tracker: https://github.com/palapa-ai/auto-qa/issues
+
+topics:
+  - mcp
+  - testing
+  - flutter-driver
+  - qa
+  - llm
+
+environment:
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+
+executables:
+  auto_qa:

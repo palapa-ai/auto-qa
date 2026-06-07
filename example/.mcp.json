@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "auto_qa": {
+      "command": "dart",
+      "args": [
+        "run",
+        "auto_qa",
+        "--launch",
+        "--device=macos",
+        "--target=test_driver/app.dart",
+        "--artifacts=.auto_qa/shots"
+      ]
+    }
+  }
+}
