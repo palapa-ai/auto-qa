@@ -43,6 +43,7 @@ import 'mcp_protocol.dart';
 /// The stdio MCP server. Construct with parsed [AutoQaOptions] and call
 /// [serve]; it runs until stdin closes (the MCP shutdown signal).
 class AutoQaServer {
+  /// Creates the server with parsed [AutoQaOptions]. Call [serve] to run it.
   AutoQaServer(this._opts);
 
   final AutoQaOptions _opts;
@@ -54,6 +55,8 @@ class AutoQaServer {
 
   // --- lifecycle ----------------------------------------------------------
 
+  /// Runs the stdio MCP loop: reads JSON-RPC requests from stdin, writes
+  /// responses to stdout, and returns when stdin closes (MCP shutdown).
   Future<void> serve() async {
     // Bring the app down with us however we exit (the client closes our stdin,
     // or sends a signal). EOF on stdin is the normal MCP shutdown.

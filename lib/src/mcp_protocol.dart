@@ -25,6 +25,7 @@ const autoQaServerVersion = '0.1.0';
 ///     Service URI, connect, and own the app's lifecycle.
 ///   * [vmServiceUri] — attach to an already-running driver-enabled app.
 class AutoQaOptions {
+  /// Creates options directly. Prefer [AutoQaOptions.parse] for CLI argv.
   AutoQaOptions({
     this.vmServiceUri,
     this.launch = false,
@@ -69,6 +70,7 @@ class AutoQaOptions {
   /// Directory the `screenshot` tool writes PNGs to (default: a temp dir).
   final String? artifactsDir;
 
+  /// Parses the server's `--flag` / `--flag=value` argv into options.
   static AutoQaOptions parse(List<String> args) {
     String? valueOf(String flag) => args
         .where((a) => a.startsWith('$flag='))
