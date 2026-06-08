@@ -1,4 +1,4 @@
-name: auto_qa_example
+name: example
 description: A tiny app demonstrating how to drive a Flutter app with auto-qa.
 publish_to: none
 version: 1.0.0

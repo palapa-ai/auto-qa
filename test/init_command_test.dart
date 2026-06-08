@@ -8,10 +8,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('autoQaMcpJson', () {
-    test('creates a fresh config registering the auto_qa server', () {
+    test('creates a fresh config registering the auto-qa server', () {
       final json = jsonDecode(autoQaMcpJson(null)) as Map<String, dynamic>;
       final servers = json['mcpServers'] as Map<String, dynamic>;
-      final server = servers['auto_qa'] as Map<String, dynamic>;
+      final server = servers['auto-qa'] as Map<String, dynamic>;
       expect(server['command'], 'dart');
       expect(server['args'], containsAll(['run', 'auto_qa', '--launch']));
       expect(server['args'], contains('--device=macos'));
@@ -21,7 +21,7 @@ void main() {
       final json = jsonDecode(autoQaMcpJson(null, device: 'chrome'))
           as Map<String, dynamic>;
       final server =
-          (json['mcpServers'] as Map)['auto_qa'] as Map<String, dynamic>;
+          (json['mcpServers'] as Map)['auto-qa'] as Map<String, dynamic>;
       expect(server['args'], contains('--device=chrome'));
     });
 
@@ -37,7 +37,7 @@ void main() {
       final json = jsonDecode(autoQaMcpJson(existing)) as Map<String, dynamic>;
       expect(json['someOtherKey'], 1);
       final servers = json['mcpServers'] as Map<String, dynamic>;
-      expect(servers.keys, containsAll(['other', 'auto_qa']));
+      expect(servers.keys, containsAll(['other', 'auto-qa']));
     });
 
     test('empty/whitespace existing is treated as a fresh file', () {
@@ -65,8 +65,8 @@ void main() {
     test('has the auto-qa frontmatter name and references the MCP tools', () {
       final md = autoQaSkillMarkdown();
       expect(md, startsWith('---\nname: auto-qa\n'));
-      expect(md, contains('mcp__auto_qa__screenshot'));
-      expect(md, contains('mcp__auto_qa__tap'));
+      expect(md, contains('mcp__auto-qa__screenshot'));
+      expect(md, contains('mcp__auto-qa__tap'));
     });
   });
 }

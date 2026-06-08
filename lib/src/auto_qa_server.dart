@@ -99,7 +99,7 @@ class AutoQaServer {
     try {
       msg = (jsonDecode(line) as Map).cast<String, dynamic>();
     } catch (e) {
-      stderr.writeln('[auto_qa] bad JSON: $e');
+      stderr.writeln('[auto-qa] bad JSON: $e');
       return;
     }
     final method = msg['method'] as String?;
@@ -126,7 +126,7 @@ class AutoQaServer {
       final content = await _callTool(name, args);
       _send(id, {'content': content});
     } catch (e, st) {
-      stderr.writeln('[auto_qa] tool "$name" failed: $e\n$st');
+      stderr.writeln('[auto-qa] tool "$name" failed: $e\n$st');
       _send(id, {
         'content': [_text('ERROR: $e')],
         'isError': true,
@@ -171,7 +171,7 @@ class AutoQaServer {
     final label = screenshotSlug(args['label'] as String? ?? 'shot');
     final path = '$dir/$n-$label.png';
     File(path).writeAsBytesSync(bytes);
-    stderr.writeln('[auto_qa] screenshot → $path (${bytes.length} bytes)');
+    stderr.writeln('[auto-qa] screenshot → $path (${bytes.length} bytes)');
     return [
       _text('saved: $path'),
       {'type': 'image', 'data': base64Encode(bytes), 'mimeType': 'image/png'},
@@ -259,7 +259,7 @@ class AutoQaServer {
 
   Future<void> _connect() async {
     final uri = _opts.vmServiceUri ?? await _launchAppForUri();
-    stderr.writeln('[auto_qa] connecting to $uri');
+    stderr.writeln('[auto-qa] connecting to $uri');
     _driver = await FlutterDriver.connect(dartVmServiceUrl: uri);
     // Give apps with async startup (network, auth) a moment before the first
     // interaction. Default is 0 — prefer `wait_for` where you can.
@@ -281,7 +281,7 @@ class AutoQaServer {
       ..._opts.dartDefines,
     ];
     stderr.writeln(
-      '[auto_qa] flutter run -d ${_opts.device} --target=${_opts.target} '
+      '[auto-qa] flutter run -d ${_opts.device} --target=${_opts.target} '
       '(${defines.length} dart-defines)',
     );
     final proc = await Process.start('flutter', [
@@ -337,10 +337,10 @@ class AutoQaServer {
         () => d.waitFor(f, timeout: const Duration(seconds: 6)),
       );
       await d.runUnsynchronized(() => d.tap(f));
-      stderr.writeln('[auto_qa] tapped startup key "$key"');
+      stderr.writeln('[auto-qa] tapped startup key "$key"');
       await Future<void>.delayed(const Duration(seconds: 2));
     } catch (e) {
-      stderr.writeln('[auto_qa] startup tap of "$key" skipped ($e)');
+      stderr.writeln('[auto-qa] startup tap of "$key" skipped ($e)');
     }
   }
 

@@ -5,7 +5,7 @@
 // Flutter Driver extension so auto-qa can connect over the Dart VM Service and
 // drive the running app. This entrypoint is for testing only — it lives outside
 // `lib/`, so the driver extension never reaches a production build.
-import 'package:auto_qa_example/main.dart' as app;
+import 'package:example/main.dart' as app;
 import 'package:flutter_driver/driver_extension.dart';
 
 void main() {

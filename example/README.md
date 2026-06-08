@@ -1,7 +1,7 @@
-# auto_qa example
+# auto-qa example
 
 A tiny, runnable Flutter app (`lib/main.dart`) plus the two pieces you need to
-drive it with `auto_qa`.
+drive it with auto-qa.
 
 - [`lib/main.dart`](lib/main.dart) — a one-screen counter app. Its widgets have
   stable `ValueKey`s (`increment`, `count`) and visible text so the agent can

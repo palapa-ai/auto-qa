@@ -1,4 +1,4 @@
-// Pure protocol + option logic for the auto_qa MCP server (`auto_qa_server.dart`).
+// Pure protocol + option logic for the auto-qa MCP server (`auto_qa_server.dart`).
 // Split out so it carries **no `flutter_driver` / Flutter dependency** and can be
 // unit-tested without a live app: JSON-RPC dispatch for the control methods, the
 // tool catalogue, CLI option parsing, and the small file/string helpers. The
@@ -12,7 +12,7 @@ const autoQaProtocolVersion = '2025-06-18';
 
 /// Server name advertised in the `initialize` handshake. This is the key clients
 /// (e.g. Claude Code's `.mcp.json`) use to namespace the tools.
-const autoQaServerName = 'auto_qa';
+const autoQaServerName = 'auto-qa';
 
 /// Server version advertised in the `initialize` handshake. Keep in sync with
 /// `pubspec.yaml`.

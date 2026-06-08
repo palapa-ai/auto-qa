@@ -1,4 +1,4 @@
-// Executable entrypoint. With no args (or server flags) it runs the auto_qa MCP
+// Executable entrypoint. With no args (or server flags) it runs the auto-qa MCP
 // server — wire it into your MCP client's `.mcp.json` as `dart run auto_qa …`.
 // `dart run auto_qa init` instead scaffolds the Claude Code wiring into the
 // current project. See the README.
