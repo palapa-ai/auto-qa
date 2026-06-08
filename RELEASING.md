@@ -1,4 +1,4 @@
-# Releasing auto_qa to pub.dev
+# Releasing auto-qa to pub.dev
 
 A checklist for cutting a release. The first publish establishes the package
 name on [pub.dev](https://pub.dev) and ties it to a publisher/account.
@@ -12,13 +12,20 @@ name on [pub.dev](https://pub.dev) and ties it to a publisher/account.
    <https://pub.dev/create-publisher>. Publishing under a verified publisher
    shows the domain on the package page and is the norm for org-owned packages.
    Optional — you can publish under your account first and migrate later.
-3. **Automated publishing (optional, recommended).** pub.dev supports
-   publishing straight from GitHub Actions on a version tag, with no long-lived
-   token. On the package's pub.dev admin page, enable
-   *Automated publishing → GitHub Actions*, set the repo to
-   `palapa-ai/auto-qa` and a tag pattern like `v{{version}}`, then add the
-   official workflow (`dart-lang/setup-dart/.github/workflows/publish.yml`).
-   Once enabled, releasing is just: tag `vX.Y.Z` and push.
+3. **Automated publishing (recommended).** This repo ships two workflows:
+   [`tag-release.yml`](.github/workflows/tag-release.yml) — on a version bump to
+   `main`, reads the version from `pubspec.yaml` and pushes the matching
+   `vX.Y.Z` tag — and [`publish.yml`](.github/workflows/publish.yml) — on that
+   tag, verifies the version + that the commit is on `main`, runs
+   format/analyze/test, then publishes via tokenless GitHub OIDC. To enable it:
+   - After the first manual publish, on the package's pub.dev admin page enable
+     *Automated publishing → GitHub Actions*, repo `palapa-ai/auto-qa`, tag
+     pattern `v{{version}}`.
+   - Add a repo secret **`RELEASE_TAG_PAT`** — a fine-grained PAT with
+     `contents: write` on `palapa-ai/auto-qa`. `tag-release.yml` pushes the tag
+     with it so the tag event triggers `publish.yml` (tags pushed with the
+     default `GITHUB_TOKEN` don't trigger other workflows). Only tag-pushing
+     uses this PAT; publishing stays tokenless.
 
 ## Pre-flight (every release)
 
@@ -56,17 +63,21 @@ Review the file list it prints, then confirm. **This is irreversible** — a
 published version can be *retracted* but never overwritten or deleted, and the
 package name is permanent.
 
-### Tag the release
+### Cut a release (bump + merge — no tagging by hand)
 
-```sh
-git tag v0.1.0
-git push origin v0.1.0
-```
+The version lives only in `pubspec.yaml`. Once automated publishing is enabled
+(see one-time setup), to release you:
 
-(If automated publishing is enabled, pushing the tag *is* the publish step —
-skip the manual `dart pub publish`.)
+1. Bump `version:` in `pubspec.yaml`, the `autoQaServerVersion` constant in
+   `lib/src/mcp_protocol.dart`, and add a matching `## X.Y.Z` heading to
+   `CHANGELOG.md` (all three must match — the workflows enforce it).
+2. Merge that to `main`.
 
-Then cut a GitHub Release from the tag with the changelog notes.
+That's it. `tag-release.yml` reads the version from `pubspec.yaml`, pushes the
+`vX.Y.Z` tag, and `publish.yml` verifies + tests + publishes via OIDC. **You
+never type a version into a release command, and there's no manual
+`dart pub publish`.** (You can still push a `vX.Y.Z` tag by hand if you ever want
+to — `publish.yml` handles that too.)
 
 ## After publishing
 

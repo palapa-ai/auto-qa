@@ -1,0 +1,62 @@
+name: Publish
+
+# Tag-triggered, tokenless publish to pub.dev via GitHub OIDC.
+# Release flow:  bump pubspec.yaml (+ autoQaServerVersion + CHANGELOG) on main —
+#                tag-release.yml then creates the vX.Y.Z tag from pubspec.yaml,
+#                which triggers this workflow. (You can also push a tag by hand.)
+# pub.dev's OIDC only trusts a version tag (not a branch push), so the trigger is
+# the tag — but the job refuses to publish unless the tagged commit is on main.
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  publish:
+    name: Verify version + publish
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # required for pub.dev OIDC (tokenless publish)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so we can check the tag is on main
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Verify version match and that the tag is on main
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME#v}"
+          pubspec=$(grep -E '^version:' pubspec.yaml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          constant=$(grep -E 'autoQaServerVersion' lib/src/mcp_protocol.dart | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+          changelog=$(grep -m1 -oE '[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md)
+          echo "tag=$tag  pubspec=$pubspec  constant=$constant  changelog=$changelog"
+
+          fail=0
+          [ "$tag" = "$pubspec" ]       || { echo "::error::tag ($tag) != pubspec.yaml version ($pubspec)"; fail=1; }
+          [ "$pubspec" = "$constant" ]  || { echo "::error::pubspec ($pubspec) != autoQaServerVersion ($constant)"; fail=1; }
+          [ "$pubspec" = "$changelog" ] || { echo "::error::pubspec ($pubspec) != top CHANGELOG entry ($changelog)"; fail=1; }
+
+          git fetch --no-tags --depth=2147483647 origin main
+          if git merge-base --is-ancestor HEAD origin/main; then
+            echo "tagged commit is on main ✓"
+          else
+            echo "::error::tag $GITHUB_REF_NAME is not on main — only release tags that are on main"
+            fail=1
+          fi
+          [ "$fail" = "0" ]
+
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: flutter analyze
+      - run: flutter test
+
+      # Tokenless publish. Requires automated publishing to be enabled once on
+      # pub.dev (Admin → Automated publishing → GitHub Actions: repo
+      # palapa-ai/auto-qa, tag pattern v{{version}}). Available only after the
+      # first manual publish.
+      - name: Publish to pub.dev
+        run: dart pub publish --force
