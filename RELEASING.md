@@ -1,4 +1,4 @@
-# Releasing auto_qa to pub.dev
+# Releasing auto-qa to pub.dev
 
 A checklist for cutting a release. The first publish establishes the package
 name on [pub.dev](https://pub.dev) and ties it to a publisher/account.
