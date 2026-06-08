@@ -1,6 +1,6 @@
-# Contributing to auto_qa
+# Contributing to auto-qa
 
-Thanks for your interest! auto_qa is intentionally small and focused: a stdio
+Thanks for your interest! auto-qa is intentionally small and focused: a stdio
 MCP server that drives a live Flutter app via `flutter_driver`. Contributions
 that keep it small, dependency-light, and well-tested are very welcome.
 
@@ -49,7 +49,7 @@ connection belongs in `mcp_protocol.dart` so it stays under test.
 ## Filing issues
 
 Use the **Bug report** or **Feature request** templates. For bugs, include the
-`[auto_qa]` stderr lines and your `flutter --version`.
+`[auto-qa]` stderr lines and your `flutter --version`.
 
 ## Releasing
 

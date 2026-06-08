@@ -8,7 +8,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-/// Builds the `.mcp.json` contents that register the auto_qa MCP server.
+/// Builds the `.mcp.json` contents that register the auto-qa MCP server.
 ///
 /// [existing] is the current `.mcp.json` text (or null/empty for a fresh file);
 /// any other servers and top-level keys in it are preserved. Throws
@@ -22,7 +22,7 @@ String autoQaMcpJson(String? existing, {String device = 'macos'}) {
       '--launch',
       '--device=$device',
       '--target=test_driver/app.dart',
-      '--artifacts=.auto_qa/shots',
+      '--artifacts=.auto-qa/shots',
     ],
   };
   final root = (existing == null || existing.trim().isEmpty)
@@ -30,7 +30,7 @@ String autoQaMcpJson(String? existing, {String device = 'macos'}) {
       : (jsonDecode(existing) as Map).cast<String, dynamic>();
   final servers = (root['mcpServers'] as Map?)?.cast<String, dynamic>() ??
       <String, dynamic>{};
-  servers['auto_qa'] = server;
+  servers['auto-qa'] = server;
   root['mcpServers'] = servers;
   return '${const JsonEncoder.withIndent('  ').convert(root)}\n';
 }
@@ -53,28 +53,28 @@ void main() {
 String autoQaSkillMarkdown() => '''---
 name: auto-qa
 description: >-
-  Drive this Flutter app hands-free for QA using the auto_qa MCP server —
+  Drive this Flutter app hands-free for QA using the auto-qa MCP server —
   navigate screens, screenshot, type, scroll, and report bugs and visual
   issues. Use when asked to QA, smoke-test, explore, or screenshot the app.
 ---
 
 # auto-qa
 
-Drive the running Flutter app through the `auto_qa` MCP server's tools and report
+Drive the running Flutter app through the auto-qa MCP server's tools and report
 what you find. The server launches the app on first use (via
 `test_driver/app.dart`), so you don't need to start it yourself.
 
-## Tools (from the `auto_qa` MCP server)
+## Tools (from the auto-qa MCP server)
 
-- `mcp__auto_qa__screenshot` — capture the screen. Your primary way to *see* the
+- `mcp__auto-qa__screenshot` — capture the screen. Your primary way to *see* the
   app; take one whenever the screen changes.
-- `mcp__auto_qa__describe` — dump the render tree to discover widget keys/labels.
-- `mcp__auto_qa__tap` — tap by `text`, `key`, or `tooltip`.
-- `mcp__auto_qa__enter_text` — type into a field (optionally focus it first via
+- `mcp__auto-qa__describe` — dump the render tree to discover widget keys/labels.
+- `mcp__auto-qa__tap` — tap by `text`, `key`, or `tooltip`.
+- `mcp__auto-qa__enter_text` — type into a field (optionally focus it first via
   `focus_text` / `focus_key`).
-- `mcp__auto_qa__scroll` — scroll a scrollable (or the screen); negative `dy`
+- `mcp__auto-qa__scroll` — scroll a scrollable (or the screen); negative `dy`
   scrolls down.
-- `mcp__auto_qa__wait_for` — wait for a widget to be present/absent.
+- `mcp__auto-qa__wait_for` — wait for a widget to be present/absent.
 
 ## Workflow
 
@@ -101,7 +101,7 @@ each `screenshot` result).
 - If a tool times out, `screenshot` to re-orient before retrying.
 ''';
 
-/// Scaffolds the Claude Code wiring for auto_qa into the current directory:
+/// Scaffolds the Claude Code wiring for auto-qa into the current directory:
 /// `.mcp.json`, `.claude/skills/auto-qa/SKILL.md`, and `test_driver/app.dart`.
 ///
 /// Supported flags: `--device=NAME` (default `macos`) and `--force` (overwrite
@@ -117,7 +117,7 @@ Future<void> runInit(List<String> args) async {
 
   stdout.writeln('\nDone. Next:');
   stdout.writeln('  • flutter pub get');
-  stdout.writeln('  • add `.auto_qa/` to your .gitignore (screenshot output)');
+  stdout.writeln('  • add `.auto-qa/` to your .gitignore (screenshot output)');
   stdout.writeln('  • open Claude Code in this project and run /auto-qa');
 }
 
@@ -127,12 +127,12 @@ void _writeMcpJson(Directory root, {required String device}) {
   try {
     f.writeAsStringSync(autoQaMcpJson(existing, device: device));
     stdout.writeln(
-      '${existing == null ? 'created' : 'updated'} .mcp.json (auto_qa server)',
+      '${existing == null ? 'created' : 'updated'} .mcp.json (auto-qa server)',
     );
   } on FormatException catch (e) {
     stderr.writeln(
       'skipped .mcp.json — existing file is not valid JSON ($e).\n'
-      'Add the auto_qa server entry manually (see the README).',
+      'Add the auto-qa server entry manually (see the README).',
     );
   }
 }

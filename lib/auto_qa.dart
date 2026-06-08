@@ -1,4 +1,4 @@
-/// auto_qa — an MCP server that lets an LLM drive a live Flutter app.
+/// auto-qa — an MCP server that lets an LLM drive a live Flutter app.
 ///
 /// Drive any driver-enabled Flutter app over the Dart VM Service and expose it
 /// to an MCP client (e.g. Claude Code) as a set of tools — screenshot, tap,

@@ -1,4 +1,4 @@
-// Unit tests for the pure protocol/option logic of the auto_qa MCP server.
+// Unit tests for the pure protocol/option logic of the auto-qa MCP server.
 // These cover everything that does NOT need a live app or a FlutterDriver
 // connection — option parsing, the JSON-RPC control dispatch, the tool
 // catalogue, and the small helpers — so they run under plain `flutter test`.
